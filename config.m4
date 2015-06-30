@@ -12,4 +12,6 @@ if test "$PHP_EOS_DATASTRUCTURES" != "no"; then
     src/enum.c \
   , $ext_shared)
 
+  PHP_INSTALL_HEADERS([ext/eos_datastructures], [php_eos_datastructures_api.h])
+  
 fi

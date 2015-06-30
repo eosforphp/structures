@@ -55,6 +55,13 @@ void php_eos_datastructures_set_enum_value(zval* enumclass, long value)
 }
 /* }}} */
 
+/* {{{ allows access to the enum class entry via other extensions */
+PHP_EOS_DATASTRUCTURES_API zend_class_entry *php_eos_datastructures_get_enum_ce(void)
+{
+	return ce_eos_datastructures_enum;
+}
+/* }}} */
+
 /* ----------------------------------------------------------------
     Eos\DataStructures\Enum class API
 ------------------------------------------------------------------*/

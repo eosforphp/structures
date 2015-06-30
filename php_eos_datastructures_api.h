@@ -20,6 +20,8 @@
 
 #define PHP_EOS_DATASTRUTCURES_API_VERSION "1.0.0"
 
+zend_class_entry *php_eos_datastructures_get_enum_ce(void);
+
 /* C apis for enums will go here */
 
 #endif /* PHP_EOS_DATASTRUCTURES_API_H */
