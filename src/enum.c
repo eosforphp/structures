@@ -39,19 +39,31 @@ static int eos_datastructures_enum_apply_set(long *option, int num_args, va_list
 ------------------------------------------------------------------*/
 
 /* {{{ function to take a zval** enum instance and give you back the long value */
-long php_eosdatastructures_get_enum_value(zval* enumclass)
+PHP_EOS_DATASTRUCTURES_API long php_eosdatastructures_get_enum_value(zval* enumclass)
 {
 	eos_datastructures_enum_object *enum_object = EOS_DATASTRUCTURES_ENUM_FETCH_OBJ(enumclass);
 	return enum_object->value;
 }
 /* }}} */
 
-/* {{{ function to take long and stick it in an enum class
-        WARNING: This does NOT check values, so make sure you don't screw up */
-void php_eos_datastructures_set_enum_value(zval* enumclass, long value)
+/* {{{ function to take long and stick it in an enum class and validates it */
+PHP_EOS_DATASTRUCTURES_API void php_eos_datastructures_set_enum_value(zval* enumclass, long value)
 {
+	zend_bool found = 0;
 	eos_datastructures_enum_object *enum_object = EOS_DATASTRUCTURES_ENUM_FETCH_OBJ(enumclass);
-	enum_object->value = value;
+
+	/* handle the "easy" case of a long */
+	zend_hash_apply_with_arguments(enum_object->elements,
+		(apply_func_args_t)eos_datastructures_enum_apply_set, 2, &value, &found);
+
+	if(found) {
+		enum_object->value = value;
+		return;
+	} else {
+		zend_throw_exception_ex(zend_get_type_error(), 0,
+			"Value %d provided is not a const in enum %s",
+			value, enum_object->std.ce->name->val);
+	}
 }
 /* }}} */
 
