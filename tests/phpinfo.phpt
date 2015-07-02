@@ -17,3 +17,4 @@ Extension => enabled
 Type => compiled as %s module
                            DataTypes Available                           
 Enum Support => enabled
+Struct Support => enabled

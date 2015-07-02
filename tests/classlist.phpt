@@ -10,7 +10,9 @@ $ext = new ReflectionExtension('eos_datastructures');
 var_dump($ext->getClassNames());
 ?>
 --EXPECT--
-array(1) {
+array(2) {
   [0]=>
   string(23) "Eos\DataStructures\Enum"
+  [1]=>
+  string(25) "Eos\DataStructures\Struct"
 }

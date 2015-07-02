@@ -18,6 +18,7 @@
 
 /* Classes to register */
 PHP_MINIT_FUNCTION(eos_datastructures_enum);
+PHP_MINIT_FUNCTION(eos_datastructures_struct);
 
 #endif /* PHP_EOS_DATASTRUCTURES_INTERNAL_H */
 

@@ -21,7 +21,7 @@
 #define PHP_EOS_DATASTRUTCURES_API_VERSION "1.0.0"
 
 zend_class_entry *php_eos_datastructures_get_enum_ce(void);
-long php_eosdatastructures_get_enum_value(zval* enumclass);
+long php_eos_datastructures_get_enum_value(zval* enumclass);
 void php_eos_datastructures_set_enum_value(zval* enumclass, long value);
 
 /* C apis for enums will go here */

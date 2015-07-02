@@ -25,6 +25,7 @@
 PHP_MINIT_FUNCTION(eos_datastructures)
 {
 	PHP_MINIT(eos_datastructures_enum)(INIT_FUNC_ARGS_PASSTHRU);
+	PHP_MINIT(eos_datastructures_struct)(INIT_FUNC_ARGS_PASSTHRU);
 	return SUCCESS;
 }
 /* }}} */
@@ -44,6 +45,7 @@ PHP_MINFO_FUNCTION(eos_datastructures)
         );
 	php_info_print_table_colspan_header(2, "DataTypes Available");
 	php_info_print_table_row(2, "Enum Support", "enabled");
+	php_info_print_table_row(2, "Struct Support", "enabled");
 	php_info_print_table_end();
 }
 /* }}} */

@@ -35,11 +35,11 @@ typedef struct _eos_datastructures_enum_object {
 static int eos_datastructures_enum_apply_set(long *option, int num_args, va_list args, zend_hash_key *hash_key);
 
 /* ----------------------------------------------------------------
-    Eos\Eos_eos_datastructures\Enum C API
+    Eos\Datastructures\Enum C API
 ------------------------------------------------------------------*/
 
 /* {{{ function to take a zval** enum instance and give you back the long value */
-PHP_EOS_DATASTRUCTURES_API long php_eosdatastructures_get_enum_value(zval* enumclass)
+PHP_EOS_DATASTRUCTURES_API long php_eos_datastructures_get_enum_value(zval* enumclass)
 {
 	eos_datastructures_enum_object *enum_object = EOS_DATASTRUCTURES_ENUM_FETCH_OBJ(enumclass);
 	return enum_object->value;
