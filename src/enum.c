@@ -67,6 +67,28 @@ PHP_EOS_DATASTRUCTURES_API void php_eos_datastructures_set_enum_value(zval* enum
 }
 /* }}} */
 
+/* {{{ function to validate a long against a ce */
+PHP_EOS_DATASTRUCTURES_API zend_bool php_eos_datastructures_check_value(zend_class_entry *ce, long value)
+{
+	zval *val;
+	zend_bool return_value = 0;
+
+	ZEND_HASH_FOREACH_VAL(&ce->constants_table, val) {
+		if(Z_LVAL_P(val) == value) {
+			return_value = 1;
+			break;
+		}
+	} ZEND_HASH_FOREACH_END();
+
+	if(!return_value) {
+		zend_throw_exception_ex(zend_get_type_error(), 0,
+			"Value %d provided is not a const in enum %s",
+			value, ce->name->val);
+	}
+	return return_value;
+}
+/* }}} */
+
 /* {{{ allows access to the enum class entry via other extensions */
 PHP_EOS_DATASTRUCTURES_API zend_class_entry *php_eos_datastructures_get_enum_ce(void)
 {
