@@ -16,6 +16,7 @@
 #endif
 
 #include <php.h>
+#include <zend_exceptions.h>
 
 #include "php_eos_datastructures.h"
 
@@ -60,7 +61,7 @@ PHP_EOS_DATASTRUCTURES_API void php_eos_datastructures_set_enum_value(zval* enum
 		enum_object->value = value;
 		return;
 	} else {
-		zend_throw_exception_ex(zend_get_type_error(), 0,
+		zend_throw_exception_ex(zend_ce_type_error, 0,
 			"Value %d provided is not a const in enum %s",
 			value, enum_object->std.ce->name->val);
 	}
@@ -81,7 +82,7 @@ PHP_EOS_DATASTRUCTURES_API zend_bool php_eos_datastructures_check_value(zend_cla
 	} ZEND_HASH_FOREACH_END();
 
 	if(!return_value) {
-		zend_throw_exception_ex(zend_get_type_error(), 0,
+		zend_throw_exception_ex(zend_ce_type_error, 0,
 			"Value %d provided is not a const in enum %s",
 			value, ce->name->val);
 	}
@@ -130,7 +131,7 @@ PHP_METHOD(EosDataStructuresEnum, __construct)
 		}
 		/* If this is NOT a numeric string, bail, otherwise continue */
 		if(!is_numeric_string(Z_STRVAL_P(name), Z_STRLEN_P(name), NULL, NULL, 0)) {
-			zend_throw_exception_ex(zend_get_type_error(), 0,
+			zend_throw_exception_ex(zend_ce_type_error, 0,
 				"Name %s provided is not a const in enum %s",
 				Z_STRVAL_P(name), enum_object->std.ce->name->val);
 			return;
@@ -150,7 +151,7 @@ PHP_METHOD(EosDataStructuresEnum, __construct)
 		return;
 	}
 
-	zend_throw_exception_ex(zend_get_type_error(), 0,
+	zend_throw_exception_ex(zend_ce_type_error, 0,
 		"Value %d provided is not a const in enum %s",
 		constant_value, enum_object->std.ce->name->val);
 }
@@ -328,7 +329,7 @@ static void eos_datastructures_enum_object_set(zval *zobject, zval *value)
 		}
 		/* If this is NOT a numeric string, bail, otherwise continue */
 		if(!is_numeric_string(Z_STRVAL_P(juggled), Z_STRLEN_P(juggled), NULL, NULL, 0)) {
-			zend_throw_exception_ex(zend_get_type_error(), 0,
+			zend_throw_exception_ex(zend_ce_type_error, 0,
 				"Name %s provided is not a const in enum %s",
 				Z_STRVAL_P(juggled), enum_object->std.ce->name->val);
 			return;
@@ -349,7 +350,7 @@ static void eos_datastructures_enum_object_set(zval *zobject, zval *value)
 		enum_object->value = lvalue;
 		return;
 	} else {
-		zend_throw_exception_ex(zend_get_type_error(), 0,
+		zend_throw_exception_ex(zend_ce_type_error, 0,
 		"Value %d provided is not a const in enum %s",
 		lvalue, enum_object->std.ce->name->val);
 	}
