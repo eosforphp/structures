@@ -177,6 +177,7 @@ PHP_MINIT_FUNCTION(eos_datastructures_struct)
 
 	eos_datastructures_struct_object_handlers.write_property = eos_datastructure_struct_object_write_property;
 	eos_datastructures_struct_object_handlers.get_property_ptr_ptr = NULL;
+	eos_datastructures_struct_object_handlers.get_method = NULL;
 	eos_datastructures_struct_object_handlers.unset_property = eos_datastructure_struct_object_unset_property;
 
 	INIT_NS_CLASS_ENTRY(ce,  EOS_DATASTRUCTURES_NAMESPACE, "Struct", eos_datastructures_struct_methods);
