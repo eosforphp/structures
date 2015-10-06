@@ -1,5 +1,5 @@
 --TEST--
-Eos\DataStructures\Struct->__construct();
+Eos\DataStructures\Struct extended
 --SKIPIF--
 <?php
 include __DIR__ . '/../skipif.inc';

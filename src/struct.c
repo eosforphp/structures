@@ -90,6 +90,10 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 
 		} else {
 
+			/* mangle scope so we can get to private/protected */
+			zend_class_entry *old_scope = EG(scope);
+			EG(scope) = Z_OBJCE_P(getThis());
+
 			ZEND_HASH_FOREACH_STR_KEY_VAL(values, str_idx, entry) {
 				if(str_idx) {
 					zval member;
@@ -98,6 +102,9 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 					zval_dtor(&member);
 				}
 			} ZEND_HASH_FOREACH_END();
+
+			/* return our scope to normal */
+			EG(scope) = old_scope;
 
 		}
 	}
@@ -133,6 +140,9 @@ static inline zend_bool eos_datastructures_struct_property_exists(zval *object, 
 		ret = (zend_get_std_object_handlers())->has_property(object, member, 0, NULL);
 	} else {
 		zend_property_info *property_info;
+		/* mangle scope so we can get to private/protected */
+		zend_class_entry *old_scope = EG(scope);
+		EG(scope) = Z_OBJCE_P(object);
 
 		property_info = zend_get_property_info(Z_OBJCE_P(object), Z_STR_P(member), 1);
 		if(property_info!= ZEND_WRONG_PROPERTY_INFO &&
@@ -140,6 +150,8 @@ static inline zend_bool eos_datastructures_struct_property_exists(zval *object, 
 		   (property_info->flags & ZEND_ACC_STATIC) == 0) {
 			ret = 1;
 		}
+		/* return our scope to normal */
+		EG(scope) = old_scope;
 	}
 
 	return ret;
@@ -174,10 +186,10 @@ static void eos_datastructure_struct_object_write_property(zval *object, zval *m
 /* }}} */
 
 /* {{{ */
-static void eos_datastructure_struct_object_read_property(zval *object, zval *member, int type, void **cache_slot, zval *rv)
+static zval *eos_datastructure_struct_object_read_property(zval *object, zval *member, int type, void **cache_slot, zval *rv)
 {
-	/*
 	zval tmp_member;
+	zval *retval = NULL;
 
 	if(Z_TYPE_P(member) != IS_STRING) {
 		tmp_member = *member;
@@ -187,18 +199,20 @@ static void eos_datastructure_struct_object_read_property(zval *object, zval *me
 		cache_slot = NULL;
 	}
 
-	if(eos_datastructures_struct_property_exists(Z_OBJCE_P(object), Z_STRVAL_P(member))) {
-		/* This exists 
-		(zend_get_std_object_handlers())->write_property(object, member, value, cache_slot);
-	} else {
-		zend_throw_exception_ex(zend_ce_type_error, 0,
-			"Name %s provided is not a property in struct %s",
-			Z_STRVAL_P(member), Z_OBJCE_P(object)->name->val);
-	}
+	/* mangle scope so we can get to private/protected */
+	zend_class_entry *old_scope = EG(scope);
+	EG(scope) = Z_OBJCE_P(object);
+
+	retval= (zend_get_std_object_handlers())->read_property(object, member, type, cache_slot, rv);
+
+	/* return our scope to normal */
+	EG(scope) = old_scope;
 
 	if(member == &tmp_member) {
 		zval_dtor(member);
-	}*/
+	}
+
+	return retval;
 }
 /* }}} */
 
@@ -251,6 +265,7 @@ PHP_MINIT_FUNCTION(eos_datastructures_struct)
 		   sizeof(zend_object_handlers));
 
 	eos_datastructures_struct_object_handlers.write_property = eos_datastructure_struct_object_write_property;
+	eos_datastructures_struct_object_handlers.read_property = eos_datastructure_struct_object_read_property;
 	eos_datastructures_struct_object_handlers.get_property_ptr_ptr = NULL;
 	eos_datastructures_struct_object_handlers.get_method = NULL;
 	eos_datastructures_struct_object_handlers.unset_property = eos_datastructure_struct_object_unset_property;
