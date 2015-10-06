@@ -20,23 +20,20 @@
 
 #include "php_eos_datastructures.h"
 
+/**
+ * Struct
+ * Immutable\Struct
+ * Typed\Struct
+ */
 zend_class_entry *ce_eos_datastructures_struct;
+zend_class_entry *ce_eos_datastructures_immutable_struct;
+zend_class_entry *ce_eos_datastructures_typed_struct;
+
 static zend_object_handlers eos_datastructures_struct_object_handlers;
+static zend_object_handlers eos_datastructures_immutable_struct_object_handlers;
+static zend_object_handlers eos_datastructures_typed_struct_object_handlers;
 
-static inline zend_bool eos_datastructures_struct_property_exists(zend_class_entry *ce, char * name) {
-	zend_property_info *property_info;
-	zend_string *key = zend_string_init(name, strlen(name), 0);
 
-	property_info = zend_get_property_info(ce, key, 1);
-	if(property_info!= ZEND_WRONG_PROPERTY_INFO &&
-	   property_info &&
-	   (property_info->flags & ZEND_ACC_STATIC) == 0) {
-		zend_string_release(key);
-		return 1;
-	}
-	zend_string_release(key);
-	return 0;
-}
 
 static void eos_datastructure_struct_object_write_property(zval *object, zval *member, zval *value, void **cache_slot);
 
@@ -71,15 +68,38 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 		return;
 	}
 
+	/**
+	 * Our arguments hashtable has two different behaviors
+	 * If we are in the generic struct class, we set each item
+	 * as a public property
+	 *
+	 * If we are in an extended class, we set only existing properties
+	 */
 	if(values) {
-		ZEND_HASH_FOREACH_STR_KEY_VAL(values, str_idx, entry) {
-			if(str_idx) {
-				zval member;
-				ZVAL_STR(&member, str_idx);
-				eos_datastructure_struct_object_write_property(getThis(), &member, entry, NULL);
-				zval_dtor(&member);
-			}
-		} ZEND_HASH_FOREACH_END();
+
+		if(Z_OBJCE_P(getThis()) == ce_eos_datastructures_struct) {
+
+			ZEND_HASH_FOREACH_STR_KEY_VAL(values, str_idx, entry) {
+				if(str_idx) {
+					zval member;
+					ZVAL_STR(&member, str_idx);
+					(zend_get_std_object_handlers())->write_property(getThis(), &member, entry, NULL);
+					zval_dtor(&member);
+				}
+			} ZEND_HASH_FOREACH_END();
+
+		} else {
+
+			ZEND_HASH_FOREACH_STR_KEY_VAL(values, str_idx, entry) {
+				if(str_idx) {
+					zval member;
+					ZVAL_STR(&member, str_idx);
+					eos_datastructure_struct_object_write_property(getThis(), &member, entry, NULL);
+					zval_dtor(&member);
+				}
+			} ZEND_HASH_FOREACH_END();
+
+		}
 	}
 }
 
@@ -99,6 +119,32 @@ static zend_object* eos_datastructures_struct_create_object(zend_class_entry *ce
 }
 /* }}} */
 
+/**
+ * Helper for property exists lookup for limiting properties to declared
+ * or declared with constructor for generics
+ */
+static inline zend_bool eos_datastructures_struct_property_exists(zval *object, zval *member) {
+	int ret = 0;
+
+	/**
+	 * Generic structs are "property is already set"
+	 */
+	if(Z_OBJCE_P(object) == ce_eos_datastructures_struct) {
+		ret = (zend_get_std_object_handlers())->has_property(object, member, 0, NULL);
+	} else {
+		zend_property_info *property_info;
+
+		property_info = zend_get_property_info(Z_OBJCE_P(object), Z_STR_P(member), 1);
+		if(property_info!= ZEND_WRONG_PROPERTY_INFO &&
+		   property_info &&
+		   (property_info->flags & ZEND_ACC_STATIC) == 0) {
+			ret = 1;
+		}
+	}
+
+	return ret;
+}
+
 /* {{{ */
 static void eos_datastructure_struct_object_write_property(zval *object, zval *member, zval *value, void **cache_slot)
 {
@@ -112,7 +158,7 @@ static void eos_datastructure_struct_object_write_property(zval *object, zval *m
 		cache_slot = NULL;
 	}
 
-	if(eos_datastructures_struct_property_exists(Z_OBJCE_P(object), Z_STRVAL_P(member))) {
+	if(eos_datastructures_struct_property_exists(object, member)) {
 		/* This exists */
 		(zend_get_std_object_handlers())->write_property(object, member, value, cache_slot);
 	} else {
@@ -124,6 +170,35 @@ static void eos_datastructure_struct_object_write_property(zval *object, zval *m
 	if(member == &tmp_member) {
 		zval_dtor(member);
 	}
+}
+/* }}} */
+
+/* {{{ */
+static void eos_datastructure_struct_object_read_property(zval *object, zval *member, int type, void **cache_slot, zval *rv)
+{
+	/*
+	zval tmp_member;
+
+	if(Z_TYPE_P(member) != IS_STRING) {
+		tmp_member = *member;
+		zval_copy_ctor(&tmp_member);
+		convert_to_string(&tmp_member);
+		member = &tmp_member;
+		cache_slot = NULL;
+	}
+
+	if(eos_datastructures_struct_property_exists(Z_OBJCE_P(object), Z_STRVAL_P(member))) {
+		/* This exists 
+		(zend_get_std_object_handlers())->write_property(object, member, value, cache_slot);
+	} else {
+		zend_throw_exception_ex(zend_ce_type_error, 0,
+			"Name %s provided is not a property in struct %s",
+			Z_STRVAL_P(member), Z_OBJCE_P(object)->name->val);
+	}
+
+	if(member == &tmp_member) {
+		zval_dtor(member);
+	}*/
 }
 /* }}} */
 
@@ -140,7 +215,7 @@ static void eos_datastructure_struct_object_unset_property(zval *object, zval *m
 		cache_slot = NULL;
 	}
 
-	if(eos_datastructures_struct_property_exists(Z_OBJCE_P(object), Z_STRVAL_P(member))) {
+	if(eos_datastructures_struct_property_exists(object, member)) {
 		zend_throw_exception_ex(zend_ce_type_error, 0,
 			"Name %s provided is a property in struct %s and cannot be unset",
 			Z_STRVAL_P(member), Z_OBJCE_P(object)->name->val);
@@ -183,7 +258,6 @@ PHP_MINIT_FUNCTION(eos_datastructures_struct)
 	INIT_NS_CLASS_ENTRY(ce,  EOS_DATASTRUCTURES_NAMESPACE, "Struct", eos_datastructures_struct_methods);
 	ce.create_object = eos_datastructures_struct_create_object;
 	ce_eos_datastructures_struct = zend_register_internal_class(&ce);
-	ce_eos_datastructures_struct->ce_flags |= ZEND_ACC_EXPLICIT_ABSTRACT_CLASS;
 
 	return SUCCESS;
 }
