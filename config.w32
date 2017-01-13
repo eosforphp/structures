@@ -8,8 +8,8 @@ if (PHP_EOS_DATASTRUCTURES != "no") {
     eos_datastructures.c \
     enum.c \
     struct.c \
-	");
+    ");
 
-	AC_DEFINE("HAVE_EOS_DATASTRUCTURES", 1);
-	PHP_INSTALL_HEADERS("ext/eos_datastructures", "php_eos_datastructures_api.h");
+    AC_DEFINE("HAVE_EOS_DATASTRUCTURES", 1);
+    PHP_INSTALL_HEADERS("ext/eos_datastructures", "php_eos_datastructures_api.h");
 }
