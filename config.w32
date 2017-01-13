@@ -1,0 +1,15 @@
+/* $Id$ */
+
+ARG_ENABLE("eos_datastructures", "Additional Datastructures for PHP7", "no");
+
+if (PHP_EOS_DATASTRUCTURES != "no") {
+    configure_module_dirname = configure_module_dirname + "\\src";
+    EXTENSION("eos_datastructures", " \
+    eos_datastructures.c \
+    enum.c \
+    struct.c \
+	");
+
+	AC_DEFINE("HAVE_EOS_DATASTRUCTURES", 1);
+	PHP_INSTALL_HEADERS("ext/eos_datastructures", "php_eos_datastructures_api.h");
+}
