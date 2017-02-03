@@ -91,8 +91,14 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 		} else {
 
 			/* mangle scope so we can get to private/protected */
+#if PHP_VERSION_ID >= 70100
+			zend_class_entry *old_scope = EG(fake_scope);
+			EG(fake_scope) = Z_OBJCE_P(getThis());
+#else
 			zend_class_entry *old_scope = EG(scope);
 			EG(scope) = Z_OBJCE_P(getThis());
+#endif
+
 
 			ZEND_HASH_FOREACH_STR_KEY_VAL(values, str_idx, entry) {
 				if(str_idx) {
@@ -104,7 +110,11 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 			} ZEND_HASH_FOREACH_END();
 
 			/* return our scope to normal */
+#if PHP_VERSION_ID >= 70100
+			EG(fake_scope) = old_scope;
+#else
 			EG(scope) = old_scope;
+#endif
 
 		}
 	}
@@ -141,8 +151,13 @@ static inline zend_bool eos_datastructures_struct_property_exists(zval *object, 
 	} else {
 		zend_property_info *property_info;
 		/* mangle scope so we can get to private/protected */
+#if PHP_VERSION_ID >= 70100
+		zend_class_entry *old_scope = EG(fake_scope);
+		EG(fake_scope) = Z_OBJCE_P(object);
+#else
 		zend_class_entry *old_scope = EG(scope);
 		EG(scope) = Z_OBJCE_P(object);
+#endif
 
 		property_info = zend_get_property_info(Z_OBJCE_P(object), Z_STR_P(member), 1);
 		if(property_info!= ZEND_WRONG_PROPERTY_INFO &&
@@ -151,7 +166,11 @@ static inline zend_bool eos_datastructures_struct_property_exists(zval *object, 
 			ret = 1;
 		}
 		/* return our scope to normal */
+#if PHP_VERSION_ID >= 70100
+		EG(fake_scope) = old_scope;
+#else
 		EG(scope) = old_scope;
+#endif
 	}
 
 	return ret;
@@ -200,13 +219,22 @@ static zval *eos_datastructure_struct_object_read_property(zval *object, zval *m
 	}
 
 	/* mangle scope so we can get to private/protected */
+#if PHP_VERSION_ID >= 70100
+	zend_class_entry *old_scope = EG(fake_scope);
+	EG(fake_scope) = Z_OBJCE_P(object);
+#else
 	zend_class_entry *old_scope = EG(scope);
 	EG(scope) = Z_OBJCE_P(object);
+#endif
 
 	retval= (zend_get_std_object_handlers())->read_property(object, member, type, cache_slot, rv);
 
 	/* return our scope to normal */
+#if PHP_VERSION_ID >= 70100
+	EG(fake_scope) = old_scope;
+#else
 	EG(scope) = old_scope;
+#endif
 
 	if(member == &tmp_member) {
 		zval_dtor(member);
