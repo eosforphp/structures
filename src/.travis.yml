@@ -1,0 +1,19 @@
+language: php
+
+php:
+  - 7.0
+  - 7.1
+
+sudo: false
+    
+env: 
+  - REPORT_EXIT_STATUS=1 NO_INTERACTION=1 SHOW_ONLY_GROUPS="FAIL,XFAIL,BORK,WARN,LEAK,SKIP"
+
+install:
+  - phpize
+  - ./configure
+  - make
+
+script: 
+  - TESTS="--show-diff" make test
+
