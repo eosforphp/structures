@@ -25,7 +25,7 @@ static zend_object_handlers eos_datastructures_enum_object_handlers;
 
 /* enum object */
 typedef struct _eos_datastructures_enum_object {
-	long        value;
+	zend_long        value;
 	HashTable  *elements;
 	zend_object std;
 } eos_datastructures_enum_object;
@@ -33,14 +33,14 @@ typedef struct _eos_datastructures_enum_object {
 #define EOS_DATASTRUCTURES_ENUM_FETCH_OBJ(zv) ((eos_datastructures_enum_object*) \
 	(((char*)Z_OBJ_P(zv)) - XtOffsetOf(eos_datastructures_enum_object, std)))
 
-static int eos_datastructures_enum_apply_set(long *option, int num_args, va_list args, zend_hash_key *hash_key);
+static int eos_datastructures_enum_apply_set(zend_long *option, int num_args, va_list args, zend_hash_key *hash_key);
 
 /* ----------------------------------------------------------------
     Eos\Datastructures\Enum C API
 ------------------------------------------------------------------*/
 
 /* {{{ function to take a zval** enum instance and give you back the long value */
-PHP_EOS_DATASTRUCTURES_API long php_eos_datastructures_get_enum_value(zval* enumclass)
+PHP_EOS_DATASTRUCTURES_API zend_long php_eos_datastructures_get_enum_value(zval* enumclass)
 {
 	eos_datastructures_enum_object *enum_object = EOS_DATASTRUCTURES_ENUM_FETCH_OBJ(enumclass);
 	return enum_object->value;
@@ -48,7 +48,7 @@ PHP_EOS_DATASTRUCTURES_API long php_eos_datastructures_get_enum_value(zval* enum
 /* }}} */
 
 /* {{{ function to take long and stick it in an enum class and validates it */
-PHP_EOS_DATASTRUCTURES_API void php_eos_datastructures_set_enum_value(zval* enumclass, long value)
+PHP_EOS_DATASTRUCTURES_API void php_eos_datastructures_set_enum_value(zval* enumclass, zend_long value)
 {
 	zend_bool found = 0;
 	eos_datastructures_enum_object *enum_object = EOS_DATASTRUCTURES_ENUM_FETCH_OBJ(enumclass);
@@ -69,7 +69,7 @@ PHP_EOS_DATASTRUCTURES_API void php_eos_datastructures_set_enum_value(zval* enum
 /* }}} */
 
 /* {{{ function to validate a long against a ce */
-PHP_EOS_DATASTRUCTURES_API zend_bool php_eos_datastructures_check_value(zend_class_entry *ce, long value)
+PHP_EOS_DATASTRUCTURES_API zend_bool php_eos_datastructures_check_value(zend_class_entry *ce, zend_long value)
 {
 	zval *val;
 	zend_bool return_value = 0;
@@ -113,7 +113,7 @@ PHP_METHOD(EosDataStructuresEnum, __construct)
 	eos_datastructures_enum_object *enum_object;
 	zend_bool found = 0;
 	zval *name = NULL;
-	long constant_value;
+	zend_long constant_value;
 
 	/* Pass 1 - check for a string value WITHOUT juggling */
 	if (FAILURE == zend_parse_parameters_throw(ZEND_NUM_ARGS(), "z", &name)) {
