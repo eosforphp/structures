@@ -38,6 +38,7 @@ install-sh
 ltmain.sh
 build/
 !config.m4
+!config.w32
 
 # Test specific Ignores
 tests/*.diff
