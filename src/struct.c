@@ -74,7 +74,7 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 	 * as a public property
 	 *
 	 * If we are in an extended class, we set only existing properties
-	 */
+	 
 	if(values) {
 
 		if(Z_OBJCE_P(getThis()) == ce_eos_datastructures_struct) {
@@ -115,9 +115,9 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 #else
 			EG(scope) = old_scope;
 #endif
-*/
+
 		}
-	}
+	} */
 }
 
 /* ----------------------------------------------------------------
