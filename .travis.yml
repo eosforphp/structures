@@ -4,7 +4,10 @@ php:
   - nightly
 
 sudo: false
-    
+
+dist:
+  - trusty
+ 
 env: 
   - REPORT_EXIT_STATUS=1 NO_INTERACTION=1 SHOW_ONLY_GROUPS="FAIL,XFAIL,BORK,WARN,LEAK,SKIP"
 
