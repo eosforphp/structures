@@ -32,7 +32,7 @@ try {
 }
 ?>
 --EXPECTF--
-object(Fruit)#2 (3) {
+object(Fruit)#%d (3) {
   ["apple"]=>
   NULL
   ["banana"]=>
@@ -40,7 +40,7 @@ object(Fruit)#2 (3) {
   ["pear"]=>
   NULL
 }
-object(Fruit)#4 (3) {
+object(Fruit)#%d (3) {
   ["apple"]=>
   NULL
   ["banana"]=>
@@ -48,7 +48,7 @@ object(Fruit)#4 (3) {
   ["pear"]=>
   NULL
 }
-object(Fruit)#5 (3) {
+object(Fruit)#%d (3) {
   ["apple"]=>
   int(7)
   ["banana"]=>

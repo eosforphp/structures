@@ -127,11 +127,12 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 /* {{{ */
 static zend_object* eos_datastructures_struct_create_object(zend_class_entry *ce)
 {
-	zend_object *object = zend_objects_new(ce);
+	zend_object *object = ecalloc(1, sizeof(zend_object)
+							 + zend_object_properties_size(ce));
 	zend_object_std_init(object, ce);
 	object_properties_init(object, ce);
 
-	//object->handlers = &eos_datastructures_struct_object_handlers;
+	object->handlers = &eos_datastructures_struct_object_handlers;
 	return object;
 }
 /* }}} */
