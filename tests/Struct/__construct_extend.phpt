@@ -8,9 +8,11 @@ include __DIR__ . '/../skipif.inc';
 <?php
 use Eos\DataStructures\Struct;
 
-class Test extends Struct {}
+class Test extends Struct {
+ const foo = 1;
+}
 
-$item = new Test();
+$item = new Test(1);
 
 /*
 try {
