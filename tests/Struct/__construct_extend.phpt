@@ -8,6 +8,7 @@ include __DIR__ . '/../skipif.inc';
 <?php
 use Eos\DataStructures\Struct;
 
+/*
 class Test extends Struct {}
 
 try {
@@ -42,7 +43,7 @@ var_dump($fruit);
 
 $fruit->apple = 1;
 $fruit->pear = 5;
-var_dump($fruit);
+var_dump($fruit); */
 ?>
 --EXPECTF--
 Eos\DataStructures\Struct::__construct() expects parameter 1 to be array, integer given
