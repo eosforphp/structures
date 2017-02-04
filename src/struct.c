@@ -102,10 +102,10 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 
 			ZEND_HASH_FOREACH_STR_KEY_VAL(values, str_idx, entry) {
 				if(str_idx) {
-					zval member;
-					ZVAL_STR(&member, str_idx);
-					eos_datastructure_struct_object_write_property(getThis(), &member, entry, NULL);
-					zval_dtor(&member);
+					//zval member;
+					//ZVAL_STR(&member, str_idx);
+					//eos_datastructure_struct_object_write_property(getThis(), &member, entry, NULL);
+					//zval_dtor(&member);
 				}
 			} ZEND_HASH_FOREACH_END();
 
