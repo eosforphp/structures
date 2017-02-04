@@ -330,7 +330,7 @@ static void eos_datastructures_enum_object_set(zval *zobject, zval *value)
 {
 	eos_datastructures_enum_object *enum_object = EOS_DATASTRUCTURES_ENUM_FETCH_OBJ(zobject);
 	zend_bool found = 0;
-	long lvalue;
+	zend_long lvalue;
 	zval *juggled;
 
 	if (Z_TYPE_P(value) == IS_OBJECT && Z_OBJ_HANDLER_P(value, get)) {
