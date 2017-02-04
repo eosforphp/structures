@@ -8,7 +8,6 @@ include __DIR__ . '/../skipif.inc';
 <?php
 use Eos\DataStructures\Struct;
 
-/*
 class Test extends Struct {}
 
 try {
@@ -16,7 +15,7 @@ try {
 } catch (TypeError $e) {
     echo $e->getMessage(), PHP_EOL;
 }
-
+/*
 // only 1 arg
 try {
     $item = new Test([],2);
