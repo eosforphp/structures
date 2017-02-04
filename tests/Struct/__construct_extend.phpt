@@ -9,6 +9,9 @@ include __DIR__ . '/../skipif.inc';
 use Eos\DataStructures\Struct;
 
 class Test extends Struct {}
+
+$item = new Test();
+
 /*
 try {
     $item = new Test(1);
