@@ -2,7 +2,7 @@
   +----------------------------------------------------------------------+
   | For PHP Version 7                                                    |
   +----------------------------------------------------------------------+
-  | Copyright (c) 2015 Elizabeth M Smith                                 |
+  | Copyright (c) 2015-2017 Elizabeth M Smith                            |
   +----------------------------------------------------------------------+
   | http://www.opensource.org/licenses/mit-license.php  MIT License      |
   | Also available in LICENSE                                            |
