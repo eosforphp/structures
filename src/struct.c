@@ -90,7 +90,7 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 
 		} else {
 
-			/* mangle scope so we can get to private/protected */
+			/* mangle scope so we can get to private/protected 
 #if PHP_VERSION_ID >= 70100
 			zend_class_entry *old_scope = EG(fake_scope);
 			EG(fake_scope) = Z_OBJCE_P(getThis());
@@ -102,20 +102,20 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 
 			ZEND_HASH_FOREACH_STR_KEY_VAL(values, str_idx, entry) {
 				if(str_idx) {
-					//zval member;
-					//ZVAL_STR(&member, str_idx);
-					//eos_datastructure_struct_object_write_property(getThis(), &member, entry, NULL);
-					//zval_dtor(&member);
+					zval member;
+					ZVAL_STR(&member, str_idx);
+					eos_datastructure_struct_object_write_property(getThis(), &member, entry, NULL);
+					zval_dtor(&member);
 				}
 			} ZEND_HASH_FOREACH_END();
 
-			/* return our scope to normal */
+			/* return our scope to normal 
 #if PHP_VERSION_ID >= 70100
 			EG(fake_scope) = old_scope;
 #else
 			EG(scope) = old_scope;
 #endif
-
+*/
 		}
 	}
 }
