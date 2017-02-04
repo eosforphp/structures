@@ -74,7 +74,7 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 	 * as a public property
 	 *
 	 * If we are in an extended class, we set only existing properties
-	 
+	 */
 	if(values) {
 
 		if(Z_OBJCE_P(getThis()) == ce_eos_datastructures_struct) {
@@ -90,7 +90,7 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 
 		} else {
 
-			/* mangle scope so we can get to private/protected 
+			/* mangle scope so we can get to private/protected */
 #if PHP_VERSION_ID >= 70100
 			zend_class_entry *old_scope = EG(fake_scope);
 			EG(fake_scope) = Z_OBJCE_P(getThis());
@@ -109,7 +109,7 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 				}
 			} ZEND_HASH_FOREACH_END();
 
-			/* return our scope to normal 
+			/* return our scope to normal */
 #if PHP_VERSION_ID >= 70100
 			EG(fake_scope) = old_scope;
 #else
@@ -117,7 +117,7 @@ PHP_METHOD(EosDataStructuresStruct, __construct)
 #endif
 
 		}
-	} */
+	}
 }
 
 /* ----------------------------------------------------------------
