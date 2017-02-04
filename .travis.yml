@@ -16,9 +16,6 @@ install:
   - ./configure
   - make
 
-before_script:
-  - phpenv config-rm xdebug.ini
-
 script: 
   - TESTS="--show-diff" make test
 
