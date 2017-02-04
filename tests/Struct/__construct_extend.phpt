@@ -15,7 +15,6 @@ try {
 } catch (TypeError $e) {
     echo $e->getMessage(), PHP_EOL;
 }
-die;
 
 // only 1 arg
 try {
