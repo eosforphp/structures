@@ -242,6 +242,25 @@ static zend_object* eos_datastructures_enum_obj_ctor(zend_class_entry *ce, eos_d
 }
 /* }}} */
 
+#if PHP_VERSION_ID < 70100
+/* {{{ helper for construct to gather up constants */
+static int eos_datastructures_enum_collect_constants(zval *constant_value, int num_args, va_list args, zend_hash_key *hash_key)
+{
+	HashTable *elements = va_arg(args, HashTable*);
+	zend_string *classname = va_arg(args, zend_string*);
+
+	if(Z_TYPE_P(constant_value) != IS_LONG) {
+		php_error(E_WARNING, "Constant %s is being cast to an integer in Enum subclass %s", hash_key->key->val, classname->val);
+		convert_to_long(constant_value);
+	}
+
+	zend_hash_add(elements, hash_key->key, constant_value);
+
+	return ZEND_HASH_APPLY_KEEP;
+}
+/* }}} */
+#endif
+
 /* {{{ */
 static zend_object* eos_datastructures_enum_create_object(zend_class_entry *ce)
 {
@@ -251,6 +270,7 @@ static zend_object* eos_datastructures_enum_create_object(zend_class_entry *ce)
 	ALLOC_HASHTABLE(intern->elements);
 	zend_hash_init(intern->elements, 8, NULL, NULL, 0);
 
+#if PHP_VERSION_ID >= 70100
 	int count = zend_hash_num_elements(&ce->constants_table);
 	if (count > 0) {
 		zend_string *key;
@@ -265,6 +285,9 @@ static zend_object* eos_datastructures_enum_create_object(zend_class_entry *ce)
 			zend_hash_add(intern->elements, key, value);
 		} ZEND_HASH_FOREACH_END();
 	}
+#else
+	zend_hash_apply_with_arguments(&ce->constants_table, (apply_func_args_t)eos_datastructures_enum_collect_constants, 2, intern->elements, ce->name);
+#endif
 
 	object_properties_init(&(intern->std), ce);
 	return return_value;
