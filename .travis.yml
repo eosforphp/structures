@@ -1,17 +1,16 @@
+sudo: false
+
 language: php
 
 php:
   - 7.0
   - 7.1
   - nightly
-
-sudo: false
-
-dist:
-  - trusty
  
 env: 
-  - REPORT_EXIT_STATUS=1 NO_INTERACTION=1 SHOW_ONLY_GROUPS="FAIL,XFAIL,BORK,WARN,LEAK,SKIP"
+  - REPORT_EXIT_STATUS=1
+  - NO_INTERACTION=1
+  - TEST_PHP_ARGS="--show-diff -q" 
 
 install:
   - phpize
@@ -19,5 +18,8 @@ install:
   - make
 
 script: 
-  - TESTS="--show-diff" make test
+  make test
 
+notifications:
+  email:
+    auroraeosrose@gmail.com
