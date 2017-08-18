@@ -75,6 +75,10 @@ PHP_EOS_DATASTRUCTURES_API zend_bool php_eos_datastructures_check_value(zend_cla
 	zend_bool return_value = 0;
 
 	ZEND_HASH_FOREACH_VAL(&ce->constants_table, val) {
+        	if (Z_TYPE_P(val) == IS_PTR) {
+            		val = (zval *) Z_PTR_P(val);
+        	}
+
 		if(Z_LVAL_P(val) == value) {
 			return_value = 1;
 			break;
